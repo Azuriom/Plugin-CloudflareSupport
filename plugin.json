@@ -9,5 +9,6 @@
     ],
     "providers": [
         "\\Azuriom\\Plugin\\CloudflareSupport\\Providers\\CloudflareSupportServiceProvider"
-    ]
+    ],
+    "apiId": 12
 }
