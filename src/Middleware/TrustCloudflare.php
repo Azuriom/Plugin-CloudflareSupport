@@ -1,6 +1,6 @@
 <?php
 
-namespace Azuriom\Plugin\CloudflareSupport\Middlewares;
+namespace Azuriom\Plugin\CloudflareSupport\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

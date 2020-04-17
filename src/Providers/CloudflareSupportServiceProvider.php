@@ -12,7 +12,7 @@ class CloudflareSupportServiceProvider extends BasePluginServiceProvider
      * @var array
      */
     protected $middleware = [
-        \Azuriom\Plugin\CloudflareSupport\Middlewares\TrustCloudflare::class,
+        \Azuriom\Plugin\CloudflareSupport\Middleware\TrustCloudflare::class,
     ];
 
     /**
