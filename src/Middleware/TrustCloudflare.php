@@ -53,6 +53,35 @@ class TrustCloudflare
 
         Request::setTrustedProxies($this->proxies, Request::HEADER_X_FORWARDED_ALL);
 
+        if (! $request->secure()) {
+            $this->setProtocolForRequest($request);
+        }
+
         return $next($request);
+    }
+
+    protected function setProtocolForRequest(Request $request)
+    {
+        $cfVisitorHeader = $request->header('CF-Visitor');
+
+        if ($cfVisitorHeader === null) {
+            return;
+        }
+
+        $cfVisitor = json_decode($cfVisitorHeader);
+
+        // Some hosts replace the X-Forwarded-Proto and X-Forwarded-Port
+        // headers and they are not valid. To prevent this we set
+        // these headers using the Cloudflare values.
+        $request->headers->add([
+            'X-Forwarded-Proto' => $cfVisitor->scheme,
+            'X-Forwarded-Port' => $cfVisitor->scheme === 'https' ? 443 : 80,
+        ]);
+
+        // Some web hosts replace the REMOTE_ADDR with the X-Forwarded-For header
+        // and the request is not considered as coming from a trusted proxy...
+        if ($cfVisitor->scheme === 'https' && ! $request->secure()) {
+            $request->server->set('HTTPS', 'on');
+        }
     }
 }
