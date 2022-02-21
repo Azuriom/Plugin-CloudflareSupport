@@ -52,7 +52,7 @@ class TrustCloudflare
         // it has a consistent format containing only one IP.
         $request->headers->set('X-Forwarded-For', $request->header('CF-Connecting-IP'));
 
-        Request::setTrustedProxies($this->proxies, Request::HEADER_X_FORWARDED_ALL);
+        Request::setTrustedProxies($this->proxies, Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_AWS_ELB);
 
         if (! $request->secure()) {
             $this->setProtocolForRequest($request);
