@@ -22,7 +22,7 @@ class CloudflareSupportServiceProvider extends BasePluginServiceProvider
      */
     public function register()
     {
-        $this->registerMiddlewares();
+        $this->middleware($this->middleware, true);
     }
 
     /**
