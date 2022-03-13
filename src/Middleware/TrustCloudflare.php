@@ -14,7 +14,7 @@ class TrustCloudflare
      *
      * @var array
      */
-    protected $proxies = [
+    protected array $proxies = [
         '103.21.244.0/22',
         '103.22.200.0/22',
         '103.31.4.0/22',
@@ -40,6 +40,17 @@ class TrustCloudflare
     ];
 
     /**
+     * The headers that should be used to detect proxies.
+     *
+     * @var int
+     */
+    protected $headers =
+        Request::HEADER_X_FORWARDED_FOR |
+        Request::HEADER_X_FORWARDED_HOST |
+        Request::HEADER_X_FORWARDED_PORT |
+        Request::HEADER_X_FORWARDED_PROTO;
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -52,7 +63,7 @@ class TrustCloudflare
         // it has a consistent format containing only one IP.
         $request->headers->set('X-Forwarded-For', $request->header('CF-Connecting-IP'));
 
-        Request::setTrustedProxies($this->proxies, Request::HEADER_X_FORWARDED_ALL);
+        Request::setTrustedProxies($this->proxies, $this->headers);
 
         if (! $request->secure()) {
             $this->setProtocolForRequest($request);
