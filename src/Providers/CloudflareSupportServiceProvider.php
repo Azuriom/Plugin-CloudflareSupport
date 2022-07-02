@@ -3,18 +3,11 @@
 namespace Azuriom\Plugin\CloudflareSupport\Providers;
 
 use Azuriom\Extensions\Plugin\BasePluginServiceProvider;
+use Azuriom\Http\Middleware\TrustProxies;
+use Azuriom\Plugin\CloudflareSupport\Middleware\TrustCloudflare;
 
 class CloudflareSupportServiceProvider extends BasePluginServiceProvider
 {
-    /**
-     * The plugin's global HTTP middleware stack.
-     *
-     * @var array
-     */
-    protected array $middleware = [
-        \Azuriom\Plugin\CloudflareSupport\Middleware\TrustCloudflare::class,
-    ];
-
     /**
      * Register any plugin services.
      *
@@ -22,7 +15,7 @@ class CloudflareSupportServiceProvider extends BasePluginServiceProvider
      */
     public function register()
     {
-        $this->middleware($this->middleware, true);
+        $this->app->bind(TrustProxies::class, TrustCloudflare::class);
     }
 
     /**

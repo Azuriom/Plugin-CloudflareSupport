@@ -2,7 +2,7 @@
     "id": "cloudflare",
     "name": "Cloudflare Support",
     "description": "Rewrite original visitors IPs and add support for flexible SSL when using Cloudflare.",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "url": "https://market.azuriom.com/resources/12",
     "authors": [
         "Azuriom"

@@ -2,10 +2,11 @@
 
 namespace Azuriom\Plugin\CloudflareSupport\Middleware;
 
+use Azuriom\Http\Middleware\TrustProxies;
 use Closure;
 use Illuminate\Http\Request;
 
-class TrustCloudflare
+class TrustCloudflare extends TrustProxies
 {
     /**
      * The trusted proxies for the application.
@@ -14,7 +15,7 @@ class TrustCloudflare
      *
      * @var array
      */
-    protected array $proxies = [
+    protected $proxies = [
         '103.21.244.0/22',
         '103.22.200.0/22',
         '103.31.4.0/22',
@@ -38,17 +39,6 @@ class TrustCloudflare
         '2a06:98c0::/29',
         '2c0f:f248::/32',
     ];
-
-    /**
-     * The headers that should be used to detect proxies.
-     *
-     * @var int
-     */
-    protected $headers =
-        Request::HEADER_X_FORWARDED_FOR |
-        Request::HEADER_X_FORWARDED_HOST |
-        Request::HEADER_X_FORWARDED_PORT |
-        Request::HEADER_X_FORWARDED_PROTO;
 
     /**
      * Handle an incoming request.
@@ -81,6 +71,10 @@ class TrustCloudflare
         }
 
         $cfVisitor = json_decode($cfVisitorHeader);
+
+        if (! isset($cfVisitor->scheme)) {
+            return;
+        }
 
         // Some hosts replace the X-Forwarded-Proto and X-Forwarded-Port
         // headers and they are not valid. To prevent this we set
