@@ -1,7 +1,7 @@
 {
     "name": "azuriom/cloudflare-support",
     "type": "azuriom-plugin",
-    "description": "Plugin for Azuriom",
+    "description": "Rewrite original visitors IPs and add support for flexible SSL when using Cloudflare.",
     "autoload": {
         "psr-4": {
             "Azuriom\\Plugin\\CloudflareSupport\\": "src/"

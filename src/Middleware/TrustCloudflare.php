@@ -5,6 +5,7 @@ namespace Azuriom\Plugin\CloudflareSupport\Middleware;
 use Azuriom\Http\Middleware\TrustProxies;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TrustCloudflare extends TrustProxies
 {
@@ -43,11 +44,9 @@ class TrustCloudflare extends TrustProxies
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         // We use CF-Connecting-IP instead of X-Forwarded-For since
         // it has a consistent format containing only one IP.
@@ -62,7 +61,7 @@ class TrustCloudflare extends TrustProxies
         return $next($request);
     }
 
-    protected function setProtocolForRequest(Request $request)
+    protected function setProtocolForRequest(Request $request): void
     {
         $cfVisitorHeader = $request->header('CF-Visitor');
 
@@ -77,7 +76,7 @@ class TrustCloudflare extends TrustProxies
         }
 
         // Some hosts replace the X-Forwarded-Proto and X-Forwarded-Port
-        // headers and they are not valid. To prevent this we set
+        // headers, and they are not valid. To prevent this we set
         // these headers using the Cloudflare values.
         $request->headers->add([
             'X-Forwarded-Proto' => $cfVisitor->scheme,
